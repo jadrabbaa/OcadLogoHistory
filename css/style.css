@@ -1055,9 +1055,10 @@ body {
 }
 .logo09{
   opacity: 0;
-  width: 100%;
+  width: 33%;
   position: absolute;
   text-align: center;
+  left: 33%;
   animation: scaleit 5s linear forwards 1;
   animation-timing-function: ease-in-out;
   animation-delay: 40s;
