@@ -1,0 +1,139 @@
+// Frameworks and Mixins
+// ---------------------------
+@import bourbon
+  
+=block($w, $h)
+  display: block
+  width: $w
+  height: $h
+  
+=font($s, $lh)
+  font-size: $s + 'px'
+  line-height: $lh + 'px'
+
+// Animations for Bubbles
+// ---------------------------
+$object_count: 9
+$object_order: 1 2 3 4 5 6 7 8 9
+$duration: 5s
+$animation_steps: 9
+
+$frame_count: $animation_steps * $object_count
+$frame_length:  100 / $frame_count
+$animation_length: $duration * $object_count
+
+@for $i from 1 through $object_count
+  .conversation__participant:nth-child(#{$i})
+    .conversation__participant__bubble
+      +animation(bubble_#{$i} $animation_length $ease-in-out-back)
+      +animation-iteration-count(infinite)
+/*
+  Iterates over a timeline, stepping up the
+  animation window by 6 frames each increment.
+  This accounts for the delay between animations
+  and allows all bubble aniamtions to exist on
+  the same theoretical timeline
+@for $i from 1 through $object_count
+  +keyframes(bubble_#{$i})
+    $on_object: nth($object_order, $i)
+    $start_percent: (($on_object - 1)/$object_count) * 100
+    0%
+      +transform(scale(0.0))
+    #{$start_percent}%
+      +transform(scale(0.0))
+    #{($start_percent)+($frame_length*1)}%
+      +transform(scale(1.0))
+    #{($start_percent)+($frame_length*4)}%
+      +transform(scale(1.0))
+    #{($start_percent)+($frame_length*5)}%
+      +transform(scale(0.0))
+    100%
+      +transform(scale(0.0))
+      
+// PAGE STYLING
+//  This isnt really the important stuff here, just the positioning and the polish. :)
+// --------------------------
+body
+  background: url("http://williamanderson.io/remote_use/patterns/bg.png")
+
+// Icon List feature
+// --------------------------
+
+// Loval Vars
+$icon_size: 70px
+$bubble_size: 70px
+$bubble_height: 16px * 3
+$triangle_size: 12px
+
+$darkGrey: #757575
+$bor_rad: 5px
+
+$participant_colors: #000 #000 #000 #000 #000 #000 #000 #000 #000
+
+.conversation
+  text-align: center
+  margin: 40px auto 50px auto
+
+.conversation__participant
+  +block($icon_size, $icon_size)
+  display: inline-block
+  margin: 0px 4px
+  position: relative
+  
+.conversation__participant__body
+  +block($icon_size*0.6, $icon_size*0.6)
+  border-radius: $icon_size*0.7
+  margin: $icon_size*0.2
+  background: black
+  color: white
+  
+  position: absolute
+  left: ($bubble_size - $icon_size ) * -0.5 - 14
+  padding: 1em
+  +font(14, 19)
+  font-family: arial, helvetica, sans-serif
+  letter-spacing: 1px
+  
+  
+@for $i from 1 through 9
+  .conversation__participant:nth-child(#{$i})
+    .conversation__participant__body
+      background: nth($participant_colors, $i)
+
+.conversation__participant__bubble
+  box-sizing: content-box
+  +block($bubble_size, auto)
+  min-height: 16px
+  position: absolute
+  top: $icon_size
+  left: ($bubble_size - $icon_size ) * -0.5 - 14
+  padding: 1em
+  +font(14, 19)
+  font-family: arial, helvetica, sans-serif
+  letter-spacing: 1px
+  color: white
+  background: $darkGrey
+  border-radius: $bor_rad
+  +transform(scale(0.0))
+  +transform-origin(center top)
+
+
+  &:before
+    content: ""
+    +triangle($triangle_size, $darkGrey, up)
+    position: absolute
+    top: $triangle_size * -0.5
+    left: 50%
+    margin-left: $triangle_size * -0.5
+
+// adjustments for alternating bubbles
+.conversation__participant:nth-child(2n)
+  .conversation__participant__bubble
+    top: auto
+    bottom: $icon_size
+    +transform-origin(center bottom)
+    &:before
+      border: 0px
+      +triangle($triangle_size, $darkGrey, down)
+      top: auto
+      bottom: $triangle_size * -0.5
